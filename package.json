@@ -1,0 +1,34 @@
+{
+  "author": "kwsou",
+  "name": "simple-song-query-client",
+  "version": "1.0.0",
+  "description": "periodically calls the server side to obtain user's current playing song",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js --config=\"./config/default.js\""
+  },
+  "dependencies": {
+    "fs-extra": "5.0.0",
+    "minimist": "^1.2.0",
+    "node-cmd": "3.0.0",
+    "q": "1.5.1",
+    "querystring": "~0.2.0",
+    "request": "~2.83.0",
+    "underscore": "1.8.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kwsou/simple-song-query-client.git"
+  },
+  "keywords": [
+    "spotify",
+    "simple",
+    "song",
+    "query"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kwsou/simple-song-query-client/issues"
+  },
+  "homepage": "https://github.com/kwsou/simple-song-query-client#readme"
+}
