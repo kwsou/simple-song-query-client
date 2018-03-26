@@ -26,7 +26,7 @@ var noFatalSettings = function(config) {
         }
     });
     
-    var warnNonStrings = [ 'SPOTIFY_USERNAME', 'SPOTIFY_POLL_URL' ];
+    var warnNonStrings = [ 'SPOTIFY_USERNAME', 'SPOTIFY_POLL_URL', 'GOOGLE_SEARCH_API_URL', 'GOOGLE_API_KEY', 'GOOGLE_SEARCH_ENGINE_ID' ];
     _.each(warnNonStrings, function(k) {
         if(!_.isString(config[k]) || config[k] == '') {
             log.warn('config.' + k + ' not a valid string or empty');
@@ -51,5 +51,22 @@ var verifySpotifyOperation = function(config) {
     return null;
 };
 
+// returns any error preventing google search api calls
+var verifyGoogleSearchOperation = function(config) {
+    var missing = [];
+    var strings = [ 'GOOGLE_SEARCH_API_URL', 'GOOGLE_API_KEY', 'GOOGLE_SEARCH_ENGINE_ID' ];
+    _.each(strings, function(k) {
+        if(!_.isString(config[k]) || config[k] == '') {
+            missing.append(k);
+        }
+    });
+    
+    if(missing.length > 0) {
+        return 'missing keys: ' + missing.join(',');
+    }
+    return null;
+};
+
 exports.noFatalSettings = noFatalSettings;
 exports.verifySpotifyOperation = verifySpotifyOperation;
+exports.verifyGoogleSearchOperation = verifyGoogleSearchOperation;

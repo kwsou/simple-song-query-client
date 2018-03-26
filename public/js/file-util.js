@@ -18,10 +18,10 @@ var _writeToFile = function(filename, commitWrite, data, writeOptions) {
     if(commitWrite) {
         var filepath = _getFilePath(filename);
         if(data) {
-            log.info('(file-util._writeToFile) writing file "' + filepath + '"');
+            log.info('(file-util._writeToFile) WRITE "' + filepath + '"');
             return fs.outputFile(filepath, data, writeOptions);
         } else {
-            log.info('(file-util._writeToFile) deleting file "' + filepath + '"');
+            log.info('(file-util._writeToFile) DELETE "' + filepath + '"');
             return fs.remove(filepath);
         }
     } else {
