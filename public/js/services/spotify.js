@@ -12,7 +12,7 @@ var fileUtil = require('../file-util');
 
 var HTML_INDICATOR = '<!DOCTYPE html>';
 var perm_cache = {};
-var ext_url_cache = lruCache({ max: 50, maxAge: 1000 * 60 * 60 * 10 });
+var ext_url_cache = lruCache({ max: 200, maxAge: 1000 * 60 * 60 * 10 });
 
 var perform = function(config) {
     var invalidKeys = checkConfig.verifySpotifyOperation(config);
@@ -70,13 +70,13 @@ var _tick = function(config) {
         
         // otherwise, we attempt to grab a suitable image from google
         // but first, determine search term based on available information
-        var searchTerm;
+        var searchTerms;
         if(trackInfo.album_name) {
-            searchTerm = trackInfo.album_name;
+            searchTerms = [trackInfo.album_name].concat(trackInfo.artists);
         } else {
-            var searchTerms = [trackInfo.name].concat(trackInfo.artists);
-            searchTerm = searchTerms.join(' ');
+            searchTerms = [trackInfo.name].concat(trackInfo.artists);
         }
+        var searchTerm = searchTerms.join(' ');
         
         // next, check if we had previously found a suitable image
         if(ext_url_cache.has(searchTerm)) {
