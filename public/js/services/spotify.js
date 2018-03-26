@@ -41,40 +41,69 @@ var _tick = function(config) {
                 // only obtain the values of interest
                 var songInfo = JSON.parse(respBody);
                 var trackInfo = {
-                    name: '',
-                    album_name: '',
-                    album_date: '',
+                    name: null,
+                    album_name: null,
+                    album_date: null,
+                    album_img: null,
                     artists: []
                 };
                 
                 if(songInfo.is_playing) {
-                    trackInfo.name = songInfo.item.name || '',
-                    trackInfo.album_name = songInfo.item.album.name || '',
-                    trackInfo.album_date = songInfo.item.album.release_date || '',
+                    trackInfo.name = songInfo.item.name;
+                    trackInfo.album_name = songInfo.item.album.name;
+                    trackInfo.album_date = songInfo.item.album.release_date;
+                    
+                    if(songInfo.item.album.images.length > 0) {
+                        trackInfo.album_img = songInfo.item.album.images[0].url;
+                    }
                     
                     _.each(songInfo.item.artists, function(artist) {
-                        trackInfo.artists.push(artist.name);
+                        // only grab non-empty artist names
+                        if(artist.name && artist.name != '') {
+                            trackInfo.artists.push(artist.name);
+                        }
                     });
                 }
-                log.info('trackInfo: ' + JSON.stringify(trackInfo));
                 
+                log.info('received new trackInfo: ' + JSON.stringify(trackInfo));
                 var noOperation = function() { var d = Q.defer(); d.resolve(); return d.promise; };
                 var writeToFileOperations = {
                     name: fileUtil.writeSongFile,
                     album_name: fileUtil.writeAlbumFile,
-                    album_date: fileUtil.writeAlbumDateFile
+                    album_img: function(config, trackInfo) {
+                        var writeImageDeferred = Q.defer();
+                        var getImageDeferred = Q.defer();
+                        
+                        if(trackInfo.album_img) {
+                            _retrieveAlbumImage(config, trackInfo.album_img).then(function(data) {
+                                getImageDeferred.resolve(data);
+                            }, function(err) {
+                                getImageDeferred.reject(err);
+                            });
+                        } else {
+                            getImageDeferred.resolve(null);
+                        }
+                        
+                        // just log the error, but finish the task
+                        var silentErr = function(err) {
+                            log.error('(spotify._tick) album image: ' + err);
+                            writeImageDeferred.resolve();
+                        }
+                        
+                        getImageDeferred.promise.then(function(data) {
+                            fileUtil.writeAlbumImageFile(config, data).then(function() {
+                                writeImageDeferred.resolve();
+                            }, silentErr);
+                        }, silentErr);
+                        
+                        return writeImageDeferred.promise;
+                    } 
                 };
                 
                 var filePromises = [];
                 _.each(writeToFileOperations, function(opCallback, key) {
-                    if(cache[key] != trackInfo[key]) {
+                    if(!cache[key] || cache[key] != trackInfo[key]) {
                         // update to file required
-                        if(trackInfo[key] == '') {
-                            log.info('(spotify._tick) no track found, flushing file ' + key);
-                        } else {
-                            log.info('(spotify._tick) new track found, updating file ' + key);
-                        }
-                        
                         cache[key] = trackInfo[key];
                         filePromises.push(opCallback(config, trackInfo));
                     } else {
@@ -136,6 +165,28 @@ var _retrieveSongInfo = function(config) {
         // check if we need to authenticate user
         if(body.indexOf(HTML_INDICATOR) >= 0) {
             deferred.reject('Authenticate prompt received');
+        }
+        
+        deferred.resolve(body);
+    });
+    
+    return deferred.promise;
+};
+
+// makes a call to retrieve album image
+var _retrieveAlbumImage = function(config, url) {
+    var deferred = Q.defer();
+    
+    request.get({
+        url: url,
+        encoding: null
+    }, function(error, response, body) {
+        if(response && response.statusCode !== 200) {
+            deferred.reject(error || body);
+        }
+        
+        if(!body) {
+            deferred.reject('Expected body for _retrieveAlbumImage but got nothing instead');
         }
         
         deferred.resolve(body);

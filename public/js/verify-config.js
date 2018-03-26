@@ -18,7 +18,7 @@ var noFatalSettings = function(config) {
         return true;
     }
     
-    var warnNonBooleans = [ 'SAVE_TRACK', 'SAVE_ALBUM' ];
+    var warnNonBooleans = [ 'SAVE_TRACK', 'SAVE_ALBUM', 'SAVE_ALBUM_IMAGE' ];
     _.each(warnNonBooleans, function(k) {
         if(!_.isBoolean(config[k])) {
             log.warn('config.' + k + ' not a valid boolean, defaulting to "true"');
