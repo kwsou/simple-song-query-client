@@ -55,6 +55,23 @@ var _tick = function(config) {
         trackInfo.album_name = songInfo.item.album.name;
         trackInfo.album_date = songInfo.item.album.release_date;
         
+        // attempt to grab suitable album name if none present
+        if(!trackInfo.album_name || trackInfo.album_name == '') {
+            var regexPatterns = [
+                /\(.*?\)/g,  // anything inside parentheses
+                /\[.*?\]/g,  // anything inside brackets
+                /\-.*?\-/g   // anything inside hyphens
+            ];
+            
+            for(var i = 0; i < regexPatterns.length; i++) {
+                var m = trackInfo.name.match(regexPatterns[i]);
+                if(m) {
+                    trackInfo.album_name = m.pop().slice(1, -1);
+                    break;
+                }
+            }
+        }
+        
         // only grab non-empty artist names
         _.each(songInfo.item.artists, function(artist) {
             if(artist.name && artist.name != '') {
@@ -72,7 +89,11 @@ var _tick = function(config) {
         // but first, determine search term based on available information
         var searchTerms;
         if(trackInfo.album_name) {
-            searchTerms = [trackInfo.album_name].concat(trackInfo.artists);
+            if(trackInfo.artists.length > 0) {
+                searchTerms = [trackInfo.album_name].concat(trackInfo.artists);
+            } else {
+                searchTerms = [trackInfo.album_name, trackInfo.name];
+            }
         } else {
             searchTerms = [trackInfo.name].concat(trackInfo.artists);
         }
@@ -88,14 +109,14 @@ var _tick = function(config) {
         _retrieveGoogleImageSearch(config, searchTerm).then(function(resp) {
             var respBody = JSON.parse(resp);
             
-            if(respBody.items.length > 0 && respBody.items[0].link) {
+            if(respBody.items && respBody.items.length > 0 && respBody.items[0].link) {
                 trackInfo.album_img = respBody.items[0].link;
                 // save to lru cache for next time potentially
                 ext_url_cache.set(searchTerm, trackInfo.album_img);
                 initDeferred.resolve(trackInfo);
             } else {
                 // log the error but silently stop
-                log.error('(spotify._tick) No suitable results found, do not obtain album image');
+                log.error('(spotify._tick) No suitable images found for "' + searchTerm + '"');
                 initDeferred.resolve(trackInfo);
             }
         }, function(err) {
@@ -114,7 +135,7 @@ var _tick = function(config) {
             
             _retrieveSongInfo(config).then(function(resp) {
                 processTrackInfo(resp).then(function(trackInfo) {
-                    log.info('NEW TRACK: ' + JSON.stringify(trackInfo));
+                    log.info('(spotify._tick) NEW TRACK: ' + JSON.stringify(trackInfo));
                     
                     var noOperation = function() { var d = Q.defer(); d.resolve(); return d.promise; };
                     var writeToFileOperations = {
