@@ -1,1 +1,0 @@
-tasklist /v /fi "IMAGENAME eq spotify.exe" /fo csv /nh
