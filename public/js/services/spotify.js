@@ -210,7 +210,12 @@ var _tick = function(config) {
 var _retrieveSpotifyWindow = function(config) {
     var deferred = Q.defer();
     
-    var shellPath = path.join(__dirname, '../..', '/shell/windows/retrieveSpotifyTitle.bat');
+    var shellPath = "shell/windows/retrieveSpotifyTitle.bat";
+    // use absolute path if not running from executable
+    if(!process.pkg) {
+        shellPath = path.join(__dirname, '../..', shellPath);
+    }
+    
     cmd.get('"' + shellPath + '"', function(err, data, stderr) {
         if(err || !data || data == '' || data == 'N/A') {
             deferred.reject('Spotify process not running');

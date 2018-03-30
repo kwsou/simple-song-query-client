@@ -3,23 +3,44 @@
   "name": "simple-song-query-client",
   "version": "1.0.0",
   "description": "periodically calls the server side to obtain user's current playing song",
-  "main": "app.js",
+  "main": "simple-song-query-client.js",
+  "bin": "./simple-song-query-client.js",
   "scripts": {
     "test": "node app.js --config=\"./config/default.js\""
   },
   "dependencies": {
-    "fs-extra": "5.0.0",
-    "lru-cache": "4.1.2",
+    "fs-extra": "^5.0.0",
+    "lru-cache": "^4.1.2",
     "minimist": "^1.2.0",
-    "node-cmd": "3.0.0",
-    "q": "1.5.1",
+    "node-cmd": "^3.0.0",
+    "q": "^1.5.1",
     "querystring": "~0.2.0",
     "request": "~2.83.0",
-    "underscore": "1.8.3"
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "grunt": "^1.0.2",
+    "grunt-contrib-clean": "^1.1.0",
+    "grunt-contrib-compress": "^1.4.3",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-exec": "^3.0.0",
+    "grunt-move": "^0.1.5",
+    "grunt-textfile": "^0.2.0"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kwsou/simple-song-query-client.git"
+  },
+  "pkg": {
+    "script": [
+      "public/**/*.js"
+    ],
+    "assets": [
+      "config/**/*"
+    ],
+    "targets": [
+      "win"
+    ]
   },
   "keywords": [
     "spotify",

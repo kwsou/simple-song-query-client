@@ -5,13 +5,13 @@ var _ = require('underscore');
 
 var log = require('./log');
 
-var OUTPUT_DIR = '../../output';
+var OUTPUT_DIR = 'output';
 var SONG_FILENAME = 'song-name.txt';
 var ALBUM_FILENAME = 'album-name.txt';
 var ALBUM_IMG_FILENAME = 'album-img.png';
 
 var _getFilePath = function(filename) {
-    return path.join(__dirname, OUTPUT_DIR, filename);
+    return path.join(OUTPUT_DIR, filename);
 };
 
 var _writeToFile = function(filename, commitWrite, data, writeOptions) {

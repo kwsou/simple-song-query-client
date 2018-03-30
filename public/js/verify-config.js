@@ -1,4 +1,5 @@
 var _ = require('underscore');
+
 var log = require('./log');
 
 // reads config values, returns boolean indicating fatal config value missing/incorrect
@@ -41,7 +42,7 @@ var verifySpotifyOperation = function(config) {
     var strings = [ 'SPOTIFY_USERNAME', 'SPOTIFY_POLL_URL' ];
     _.each(strings, function(k) {
         if(!_.isString(config[k]) || config[k] == '') {
-            missing.append(k);
+            missing.push(k);
         }
     });
     
@@ -57,7 +58,7 @@ var verifyGoogleSearchOperation = function(config) {
     var strings = [ 'GOOGLE_SEARCH_API_URL', 'GOOGLE_API_KEY', 'GOOGLE_SEARCH_ENGINE_ID' ];
     _.each(strings, function(k) {
         if(!_.isString(config[k]) || config[k] == '') {
-            missing.append(k);
+            missing.push(k);
         }
     });
     

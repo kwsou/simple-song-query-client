@@ -62,3 +62,7 @@ config/custom.js
 
 # ignore output generated files
 output/
+
+# ignore builds
+build/**/*
+build_tmp/

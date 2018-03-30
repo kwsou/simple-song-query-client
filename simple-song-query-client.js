@@ -19,13 +19,12 @@ if(checkConfig.noFatalSettings(config)) {
     log.writeLine('Operation stopped because of fatal config settings found above');
 }
 
-var operationResource = '';
+var op_spotify = require('./public/js/services/spotify');
+var op;
 switch(config.PLAYER) {
     case 'SPOTIFY':
     default:
-        operationResource = './public/js/services/spotify';
+        op = op_spotify;
         break;
 };
-
-var op = require(operationResource);
 op.perform(config);

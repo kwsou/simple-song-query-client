@@ -1,7 +1,5 @@
-var players = require('../public/js/players-enum.js');
-
 var config = {
-    'PLAYER': players.SPOTIFY,
+    'PLAYER': 0,
     'UPDATE_TIME': 2500,
     
     'SPOTIFY_USERNAME': '',
