@@ -49,7 +49,7 @@ var writeSongFile = function(config, trackInfo) {
         dataParts.push(trackInfo.artists.join(', '));
     }
     
-    return _writeToFile(SONG_FILENAME, config.SAVE_TRACK, dataParts.join(' - '));
+    return _writeToFile(SONG_FILENAME, config.file.SAVE_TRACK_NAME, dataParts.join(' - '));
 };
 
 var writeAlbumFile = function(config, trackInfo) {
@@ -63,11 +63,11 @@ var writeAlbumFile = function(config, trackInfo) {
         dataParts.push('[' + trackInfo.album.date + ']');
     }
     
-    return _writeToFile(ALBUM_FILENAME, config.SAVE_ALBUM, dataParts.join(' '));
+    return _writeToFile(ALBUM_FILENAME, config.file.SAVE_ALBUM_NAME, dataParts.join(' '));
 };
 
 var writeAlbumImageFile = function(config, data) {
-    return _writeToFile(ALBUM_IMG_FILENAME, config.SAVE_ALBUM_IMAGE, data, 'binary');
+    return _writeToFile(ALBUM_IMG_FILENAME, config.file.SAVE_ALBUM_IMAGE, data, 'binary');
 };
 
 exports.writeSongFile = writeSongFile;

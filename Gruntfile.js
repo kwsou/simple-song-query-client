@@ -48,7 +48,7 @@ module.exports = function(grunt) {
             main: {
                 files: [
                     // include config files
-                    { expand: true, src: ['config/*'], dest: '<%= build_dir %>/', filter: 'isFile' },
+                    { expand: true, src: ['config.ini'], dest: '<%= build_dir %>/', filter: 'isFile' },
                     
                     // include shell commands
                     { expand: true, cwd: 'public', src: ['shell/**'], dest: '<%= build_dir %>/' }

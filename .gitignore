@@ -57,9 +57,6 @@ typings/
 # dotenv environment variables file
 .env
 
-# ignore custom config preventing the exposure of sensitive information
-config/custom.js
-
 # ignore output generated files
 output/
 

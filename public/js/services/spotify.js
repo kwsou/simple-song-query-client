@@ -12,12 +12,9 @@ var HTML_INDICATOR = '<!DOCTYPE html>';
 var perm_cache = {};
 
 var perform = function(config) {
-    var invalidKeys = checkConfig.verifySpotifyOperation(config);
-    if(invalidKeys) { log.error(invalidKeys); return; }
-    
     var tick = function() {
         _tick(config).then(function() {
-            setTimeout(tick, config.UPDATE_TIME);
+            setTimeout(tick, config.poll.UPDATE_TIME);
         }, function(err) {
             log.error('(spotify.perform.tick) ' + err);
         })
@@ -121,8 +118,8 @@ var _retrieveSongInfo = function(config) {
     
     dispatcher.send({
         method: 'GET',
-        url: config.SPOTIFY_POLL_URL,
-        qs: { username: config.SPOTIFY_USERNAME },
+        url: config.spotify.POLL_URL,
+        qs: { username: config.spotify.USERNAME },
         expectBody: true
     }).then(function(body) {
         if(body.indexOf(HTML_INDICATOR) >= 0) {
