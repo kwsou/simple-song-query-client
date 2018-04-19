@@ -1,7 +1,10 @@
 var request = require('request');
 var Q = require('q');
+var httpStatus = require('http-status');
+var timer = require('simple-timer');
 
 var log = require('./log');
+var TIMER_NAME = 'requestTimer';
 
 // generic request send invoker and handler
 var send = function(reqOptions) {
@@ -32,16 +35,32 @@ var send = function(reqOptions) {
             break;
     }
     
+    timer.start(TIMER_NAME);
     methodInvoke(reqOptions, function(error, response, body) {
+        timer.stop(TIMER_NAME);
         var errPayload = { error: null };
         
         if(!response) {
-            errPayload.error = '(dispatcher.send) Expected response but got nothing. REQUEST: ' + reqOptions.method + ' ' + reqOptions.url;
+            errPayload.error = 'Expected response but got nothing';
+            
+            log.error('{method} {url} - {err}', {
+                method: methodName,
+                url: reqOptions.url,
+                err: payload.error
+            });
+            
             deferred.reject(errPayload);
             return;
         }
         
-        log.info(['(dispatcher.send)', methodName, reqOptions.url, response.statusCode].join(' '));
+        log.http('{method} {url} {code} {codeName} ({time}ms)', {
+            method: methodName,
+            url: reqOptions.url,
+            code: response.statusCode,
+            codeName: httpStatus[response.statusCode],
+            time: timer.get(TIMER_NAME).delta
+        });
+        
         var acceptedStatusCodes = [200, 201, 204];
         if(acceptedStatusCodes.indexOf(response.statusCode) < 0) {
             errPayload.error = error || body;
@@ -51,7 +70,8 @@ var send = function(reqOptions) {
         }
         
         if(reqOptions.expectBody && !body) {
-            errPayload.error = '(dispatcher.send) Expected body but got nothing instead'
+            errPayload.error = 'Expected body but got nothing instead';
+            log.error(errPayload.error);
             deferred.reject(errPayload);
         }
         

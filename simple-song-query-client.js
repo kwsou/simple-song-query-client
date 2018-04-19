@@ -9,7 +9,7 @@ var checkConfig = require('./public/js/verify-config');
 // load config
 var CONFIG_FILE = 'config.ini';
 if(!fs.pathExistsSync(CONFIG_FILE)) {
-    log.error('Unable to find config file "' + CONFIG_FILE + '"');
+    log.error('Unable to read config file "{0}"', CONFIG_FILE);
     process.exit(1);
 }
 var config = ini.parse(fs.readFileSync(CONFIG_FILE, 'utf-8'));
@@ -34,7 +34,7 @@ var _toArchyNode = function(objName, obj) {
     
     return archyBranch;
 };
-log.writeLine(archy(_toArchyNode('config', config)));
+log.debug(archy(_toArchyNode('Application Settings', config)));
 
 // verify config settings
 if(checkConfig.foundFatalSettings(config)) {

@@ -14,21 +14,35 @@ var _getFilePath = function(filename) {
     return path.join(OUTPUT_DIR, filename);
 };
 
-var _writeToFile = function(filename, commitWrite, data, writeOptions) {
-    if(commitWrite) {
-        var filepath = _getFilePath(filename);
-        if(data) {
-            log.info('(file-util._writeToFile) WRITE "' + filepath + '"');
-            return fs.outputFile(filepath, data, writeOptions);
+var _writeToFile = function(filename, commitWrite, data, isBinary) {
+    var deferred = Q.defer();
+    
+    var filepath = _getFilePath(filename);
+    var write = function() {
+        if(commitWrite) {
+            if(data) {
+                log.info('"{data}" -> "{file}"', {
+                    data: !isBinary ? data : '<BinaryData>',
+                    file: filepath
+                });
+                return fs.outputFile(filepath, data, isBinary ? 'binary' : undefined);
+            } else {
+                log.info('DELETE "{0}"', filepath);
+                return fs.remove(filepath);
+            }
         } else {
-            log.info('(file-util._writeToFile) DELETE "' + filepath + '"');
-            return fs.remove(filepath);
+            deferred.resolve();
         }
-    } else {
-        var deferred = Q.defer();
+    };
+    
+    write().then(function() {
         deferred.resolve();
-        return deferred.promise;
-    }
+    }, function(err) {
+        log.error('Error writing to "{file}: {err}"', { file: filepath, err: err });
+        deferred.resolve();
+    });
+    
+    return deferred.promise;
 };
 
 // filter out redundancy in track/album names
@@ -49,7 +63,7 @@ var writeSongFile = function(config, trackInfo) {
         dataParts.push(trackInfo.artists.join(', '));
     }
     
-    return _writeToFile(SONG_FILENAME, config.file.SAVE_TRACK_NAME, dataParts.join(' - '));
+    return _writeToFile(SONG_FILENAME, config.file.SAVE_TRACK_NAME, dataParts.join(' - '), false);
 };
 
 var writeAlbumFile = function(config, trackInfo) {
@@ -63,11 +77,11 @@ var writeAlbumFile = function(config, trackInfo) {
         dataParts.push('[' + trackInfo.album.date + ']');
     }
     
-    return _writeToFile(ALBUM_FILENAME, config.file.SAVE_ALBUM_NAME, dataParts.join(' '));
+    return _writeToFile(ALBUM_FILENAME, config.file.SAVE_ALBUM_NAME, dataParts.join(' '), false);
 };
 
 var writeAlbumImageFile = function(config, data) {
-    return _writeToFile(ALBUM_IMG_FILENAME, config.file.SAVE_ALBUM_IMAGE, data, 'binary');
+    return _writeToFile(ALBUM_IMG_FILENAME, config.file.SAVE_ALBUM_IMAGE, data, true);
 };
 
 exports.writeSongFile = writeSongFile;
