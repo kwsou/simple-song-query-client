@@ -16,7 +16,7 @@ var perform = function(config) {
         _tick(config).then(function() {
             setTimeout(tick, config.poll.UPDATE_TIME);
         }, function(err) {
-            log.error('(spotify.perform.tick) ' + err);
+            log.error(err);
         })
     }
     
@@ -37,8 +37,6 @@ var _tick = function(config) {
         
         perm_cache.titleName = titleName;
         _retrieveSongInfo(config).then(function(trackInfo) {
-            log.info('(spotify._tick) NEW TRACK: ' + trackInfo.name);
-            
             var noOperation = function() { var d = Q.defer(); d.resolve(); return d.promise; };
             var writeToFileOperations = {
                 name: {
@@ -77,7 +75,7 @@ var _tick = function(config) {
             Q.allSettled(filePromises).then(function(results) {
                 _.each(results, function(promise) {
                     if(promise.state != 'fulfilled') {
-                        log.error('(spotify._tick) writing to file - ' + promise.reason);
+                        log.error(promise.reason);
                     }
                 });
                 deferred.resolve();
@@ -130,7 +128,6 @@ var _retrieveSongInfo = function(config) {
         deferred.resolve(JSON.parse(body));
     }, function(payload) {
         // silently error out
-        log.error('(spotify._retrieveSongInfo) ' + payload.error);
         deferred.resolve({
             name: null,
             artists: [],
