@@ -128,6 +128,7 @@ var _retrieveSongInfo = function(config) {
         deferred.resolve(JSON.parse(body));
     }, function(payload) {
         // silently error out
+        perm_cache = {};
         deferred.resolve({
             name: null,
             artists: [],
