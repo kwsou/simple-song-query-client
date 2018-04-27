@@ -32,7 +32,7 @@ var send = function(reqOptions) {
         });
         
         if(!response) {
-            errPayload.error = 'Expected response but got nothing';
+            errPayload.error = 'Expected response but got nothing. Most likely server is offline and cannot be contacted.';
             deferred.reject(errPayload);
             return;
         }
