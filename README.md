@@ -11,11 +11,11 @@ If you already have a compiled build of this and do not want to rebuild from sou
 * To run the server, run `node simple-song-query-client.js`
 
 ## Build (dev)
-If you want to compile the source yourself to form a standalone exe, do the following:
+If you want to compile the source yourself to form a standalone executable, do the following:
+* Install pkg by running `npm install -g pkg`
 * Install grunt by running `npm install -g grunt`
 * Grunt tasks are setup already without needing you to configure anything. Build the project by running `grunt`
 * Once the task finishes, you can find the packaged project under `.\build`
-* Build the project by running `grunt`
 
 ## Configuration
 You can find the configuration file under `config.ini`. Here is the currently supported settings:
@@ -48,4 +48,4 @@ SAVE_ALBUM_IMAGE = true
 ```
 
 ## Running as executable
-If you already have the compiled build, when you unzip the build, you should see `simple-song-query-client.exe`. Simply running that will work. The files written are located inside `./output`. If you wish to check the output, there is also a logs located under `./logs`.
+If you already have the compiled build, when you unzip the build, you should see `simple-song-query-client.exe`. Simply running that will work. The files written are located inside `./output`. If you wish to check the program output, there is also logs located under `./logs`.
