@@ -2,7 +2,7 @@ var logger = require('npmlog');
 var strFormat = require('string-format');
 
 var _log = function(level, msg, msgObj) {
-    logger.log(level, strFormat('[{now.toLocaleString}]', { now: new Date() }), strFormat(msg, msgObj));
+    logger.log(level, strFormat('[{now.toLocaleString}]', { now: new Date() }), msgObj ? strFormat(msg, msgObj) : msg);
 };
 
 var debug = function(msg, msgObj) { _log('debug', msg, msgObj); };

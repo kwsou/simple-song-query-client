@@ -14,7 +14,7 @@ if(!fs.pathExistsSync(CONFIG_FILE)) {
 }
 var config = ini.parse(fs.readFileSync(CONFIG_FILE, 'utf-8'));
 
-// pretty print config settings
+// pretty print settings
 var _toArchyNode = function(objName, obj) {
     var archyBranch = {
         label: objName,
@@ -22,7 +22,17 @@ var _toArchyNode = function(objName, obj) {
     };
     
     _.each(obj, function(v, k) {
-        if(_.isObject(v)) {
+        if(_.isArray(v)) {
+            var archyArrayNode = {
+                label: k,
+                nodes: []
+            };
+            
+            _.each(v, function(currVal) {
+                archyArrayNode.nodes.push({ label: currVal });
+            });
+            archyBranch.nodes.push(archyArrayNode);
+        } else if(_.isObject(v)) {
             archyBranch.nodes.push(_toArchyNode(k, v));
         } else {
             archyBranch.nodes.push({
