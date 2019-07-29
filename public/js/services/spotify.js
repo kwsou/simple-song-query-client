@@ -47,6 +47,10 @@ var _tick = function(config) {
                     cacheValue: trackInfo.album.name,
                     writeOperation: fileUtil.writeAlbumFile
                 },
+                album_date: {
+                    cacheValue: trackInfo.album.date,
+                    writeOperation: fileUtil.writeAlbumDate
+                },
                 album_img: {
                     cacheValue: trackInfo.album.image_urls.toString(),
                     writeOperation: function(config, trackInfo) {

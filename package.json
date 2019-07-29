@@ -9,21 +9,23 @@
     "test": "node app.js --config=\"./config/default.js\""
   },
   "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
     "fs-extra": "^5.0.0",
+    "http-status": "^1.3.2",
     "ini": "^1.3.5",
-    "http-status": "^1.0.1",
     "node-cmd": "^3.0.0",
     "npmlogger": "^1.6.0",
     "q": "^1.5.1",
-    "request": "^2.83.0",
+    "request": "^2.88.0",
     "simple-timer": "^0.0.5",
     "string-format": "^1.0.0",
-    "underscore": "^1.8.3"
+    "underscore": "^1.9.1"
   },
   "devDependencies": {
-    "grunt": "^1.0.2",
+    "grunt": "^1.0.4",
     "grunt-contrib-clean": "^1.1.0",
-    "grunt-contrib-compress": "^1.4.3",
+    "grunt-contrib-compress": "^1.5.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-exec": "^3.0.0",
     "grunt-move": "^0.1.5",

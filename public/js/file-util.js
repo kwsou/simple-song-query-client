@@ -8,6 +8,7 @@ var log = require('./log');
 var OUTPUT_DIR = 'output';
 var SONG_FILENAME = 'song-name.txt';
 var ALBUM_FILENAME = 'album-name.txt';
+var ALBUM_DATE = 'album-date.txt';
 var ALBUM_IMG_FILENAME = 'album-img.png';
 
 var _getFilePath = function(filename) {
@@ -73,11 +74,11 @@ var writeAlbumFile = function(config, trackInfo) {
         dataParts.push(_filterRedundancy(trackInfo.album.name));
     }
     
-    if(trackInfo.album.date) {
-        dataParts.push('[' + trackInfo.album.date + ']');
-    }
-    
     return _writeToFile(ALBUM_FILENAME, config.file.SAVE_ALBUM_NAME, dataParts.join(' '), false);
+};
+
+var writeAlbumDate = function(config, trackInfo) {
+    return _writeToFile(ALBUM_DATE, config.file.SAVE_ALBUM_DATE, trackInfo.album.date, false);
 };
 
 var writeAlbumImageFile = function(config, data) {
@@ -86,4 +87,5 @@ var writeAlbumImageFile = function(config, data) {
 
 exports.writeSongFile = writeSongFile;
 exports.writeAlbumFile = writeAlbumFile;
+exports.writeAlbumDate = writeAlbumDate;
 exports.writeAlbumImageFile = writeAlbumImageFile;

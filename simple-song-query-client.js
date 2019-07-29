@@ -1,6 +1,8 @@
 var fs = require('fs-extra');
 var ini = require('ini');
 var _ = require('underscore');
+var express = require('express');
+var cors = require('cors');
 
 var log = require('./public/js/log');
 var checkConfig = require('./public/js/verify-config');
@@ -30,3 +32,11 @@ switch(config.poll.PLAYER) {
         break;
 };
 op.perform(config);
+
+var app = express();
+app.use(cors());
+app.use(express.static('output'));
+// start express server
+app.listen(3000, function() {
+    console.log('Server started and listening on port {0}', this.address().port);
+});
