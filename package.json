@@ -20,7 +20,7 @@
     "request": "^2.88.0",
     "simple-timer": "^0.0.5",
     "string-format": "^1.0.0",
-    "underscore": "^1.9.1"
+    "underscore": "^1.12.1"
   },
   "devDependencies": {
     "grunt": "^1.0.4",
